@@ -23,7 +23,7 @@ public class App
     public static void main( String[] args )
     {
         registrarUsuario(new User(1, "Juan", "Alvarez"));
-        for(int i = 1; i<10000; i++) {
+        for(int i = 1; i<100; i++) {
         	registrarUsuario(new User(i, null, null));
         }
     }
@@ -57,17 +57,19 @@ public class App
     private static boolean comprobarUsuario(User user) {
     	String item = null;
     	boolean existeUsuario = false;
+    	int numeroLinea = 1;
     	try(BufferedReader in = new BufferedReader(new FileReader(".\\\\src\\\\Files\\\\users.info"))){
     		item = in.readLine();
     		while(item!=null&&!existeUsuario) {
-    			logger.debug("id con el que se compara: {}", item.charAt(3));
+    			logger.debug("id con el que se compara: {}", getIdAtLine(numeroLinea));
     			//Se lee el fichero linea a linea hasta que en la posicion 4 de cada linea encuentre el id
     			//y lo compare con el id del usuario pasado por parametro
-    			if(Character.getNumericValue(item.charAt(3)) == user.getId()) {
+    			if(getIdAtLine(numeroLinea).equals(Integer.toString(user.getId()))) {
     				existeUsuario = true;
     				logger.debug("entro en la comprobacion");
     			}
     			item = in.readLine();
+    			numeroLinea++;
     		}
     	} catch (FileNotFoundException e) {
     		logger.error("No existe ningun archivo con registros de usuarios....CREANDO");
@@ -76,5 +78,30 @@ public class App
 			logger.error(e.toString());
 		}
 		return existeUsuario;
+    }
+    
+    @SuppressWarnings("unused")
+	private static String getIdAtLine (int numeroLinea) {
+    	int contador = 1;
+    	int posInLine = 3;
+    	String text = "";
+    	String item;
+    	try(BufferedReader in = new BufferedReader(new FileReader(".\\\\src\\\\Files\\\\users.info"))){
+    		item = in.readLine();
+    		while(item!=null&&contador<=numeroLinea) {
+    			item = in.readLine();
+    			numeroLinea++;
+    		}
+    		while(item.charAt(posInLine)!=',') {
+    			text += item.charAt(posInLine);
+    			posInLine++;
+    		}
+    		
+    	} catch (FileNotFoundException e) {
+    		logger.error("No existe ningun archivo con registros de usuarios....CREANDO");
+		} catch (IOException e) {
+			logger.error(e.toString());
+		}
+    	return text;
     }
 }

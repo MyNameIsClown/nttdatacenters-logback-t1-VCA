@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<timestamp key="timestamp" datePattern="dd-MM-yyyy" />
-
-	<appender name="rollingFile"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${application.home:-.}/logs/logVCA.log</file>
-		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>logVCA-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-			<minIndex>1</minIndex>
-			<maxIndex>3</maxIndex>
-		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>50KB</maxFileSize>
-		</triggeringPolicy>
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-			</pattern>
-		</encoder>
-	</appender>
+	<property name="LOG_ROOT" value="./logs" />
+	<property name="LOG_FILE_NAME" value="logVCA" />
 
 	<appender name="STDOUT"
 		class="ch.qos.logback.core.ConsoleAppender">
@@ -29,7 +11,26 @@
 		</encoder>
 	</appender>
 
-	<root level="info">
-		<appender-ref ref="rollingFile" />
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_ROOT}/${LOG_FILE_NAME}.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_ROOT}/${LOG_FILE_NAME}-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<!-- Cada archivo tendra 50 KB de tamaño como maximo -->
+			<maxFileSize>50KB</maxFileSize>
+			<!-- El tamaño total de todos los archivos sera de 100 GB, si se sobrepasa el limite, se reemplazaran
+			los archivos mas antiguos -->
+			<totalSizeCap>100GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="TRACE">
+		<appender-ref ref="FILE" />
 	</root>
+	
 </configuration>
