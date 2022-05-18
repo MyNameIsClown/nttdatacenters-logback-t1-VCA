@@ -4,29 +4,47 @@ import java.io.Serializable;
 
 import com.github.javafaker.Faker;
 
+/**
+ * User
+ * @author Victor Carrasco Artacho
+ *
+ */
 @SuppressWarnings("serial")
 public class User implements Serializable{
 	private Faker faker;
 	private int id;
 	private String name;
-	private String apellidos;
+	private String lastName;
 	private String address;
 	private int phoneNumber;
+	
+	/**
+	 * Constructor simple con el que se asignan datos aleatorios
+	 * @param id
+	 */
 	public User(int id) {
 		super();
 		this.setFaker(new Faker());
 		this.id = id;
 		this.name = faker.name().firstName();
 		this.address = faker.address().streetAddress();
-		this.apellidos = faker.name().lastName();
-		this.phoneNumber = generarNumeroTelefono();
+		this.lastName = faker.name().lastName();
+		this.phoneNumber = generatePhoneNumber();
 	}
+	/**
+	 * Constructor Completo
+	 * @param id
+	 * @param name
+	 * @param apellidos
+	 * @param address
+	 * @param phoneNumber
+	 */
 	public User(int id, String name, String apellidos, String address, int phoneNumber) {
 		super();
 		this.setFaker(new Faker());
 		this.id = id;
 		this.name = name;
-		this.apellidos = apellidos;
+		this.lastName = apellidos;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 	}
@@ -57,28 +75,35 @@ public class User implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "id=" + id + ", name=" + name + ", apellidos=" + apellidos + ", address=" + address
+		return "id=" + id + ", name=" + name + ", apellidos=" + lastName + ", address=" + address
 				+ ", phoneNumber=" + phoneNumber;
 	}
 	public String getApellidos() {
-		return apellidos;
+		return lastName;
 	}
 	public void setApellidos(String apellidos) {
-		this.apellidos = apellidos;
+		this.lastName = apellidos;
 	}
 	
-	public static Integer generarNumeroTelefono() {
+	/**
+	 * generatePhoneNumber
+	 * 
+	 * get random phone Number
+	 * @return
+	 */
+	public static Integer generatePhoneNumber() {
 		int counter = 1;
-		Integer numeroTelefono [] = new Integer[9];
-		String numeroTelefonoString [] = new String[9];
-		numeroTelefono[0] = 6;
-		numeroTelefonoString[0] = numeroTelefono[0].toString();
-		while(numeroTelefono[8]==null) {
-			numeroTelefono[counter] = (int) (Math.random()*10);
-			numeroTelefonoString[counter] = numeroTelefono[counter].toString();
+		Integer phoneNumber [] = new Integer[9];
+		String phoneNumberString [] = new String[9];
+		//el primer numero siempre sera el 6
+		phoneNumber[0] = 6;
+		phoneNumberString[0] = phoneNumber[0].toString();
+		while(phoneNumber[8]==null) {
+			phoneNumber[counter] = (int) (Math.random()*10);
+			phoneNumberString[counter] = phoneNumber[counter].toString();
 			counter++;
 		}
-		return Integer.parseInt(String.join("",numeroTelefonoString));
+		return Integer.parseInt(String.join("",phoneNumberString));
 	}
 	public Faker getFaker() {
 		return faker;
@@ -86,5 +111,4 @@ public class User implements Serializable{
 	public void setFaker(Faker faker) {
 		this.faker = faker;
 	}
-	
 }
